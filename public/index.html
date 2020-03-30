@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Social Distinstagram</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header>
+        <h1>Social Distinstagram</h1><br>
+        <h3>A place to share your favourite images of social distance during the COVID-19 era</h3>
+    </header>
+
+    <div id="main">
+        <form class="image-upload">
+            <input v-model="title" type="text" name="title" placeholder="Title" maxlength="50">
+            <input v-model="description" type="text" name="description" placeholder="Description" maxlength="100">
+            <input v-model="username" type="text" name="username" placeholder="Username" maxlength="15">
+            <input @change="handleChange" type="file" name="file" accept="image/*"><br><br>
+            <button @click="uploadImage" class="form-button">Add Image</button>
+        </form>
+        <div class="image-container">
+            <div class="card" v-for="image in images" :key="image.id">
+                <a :href="'#' + image.id" style="text-decoration: none">
+                    <img class="card-image" :src="image.url" :alt="image.description">
+                    <p class="card-title">{{image.title}}</p>
+                </a>
+            </div>
+        </div>
+        <div class="more" v-if="showMoreButton">
+            <button class="more-button" @click="getMoreImages">More</button>
+        </div>
+        <my-modal 
+            v-if="selectedImageId"
+            :image-id="selectedImageId"
+            @close="closeModal"
+        >
+        </my-modal>
+    </div>
+
+    <script id="modal" type="text/x-template">
+        <div class="overlay" @click.self.prevent="requestCloseModal">
+            <div class="modal">
+                <a :href="'#' + image.prev_id"><h1 class="nav" id="prev" v-if="image.prev_id">></h1></a>
+                <a :href="'#' + image.next_id"><h1 class="nav" id="next" v-if="image.next_id"><</h1></a>
+                <img :src="image.url" alt="image.description">
+                <h2 class="modal-title">{{image.title}}</h2>
+                <h4 class="modal-description">{{image.description}}</h4>
+                <p class="modal-uploader">Uploaded by {{image.username}} on {{image.created_at}}</p>
+                <my-add-comment :image="image" @comment="addComment"></my-add-comment>
+                <my-comments :comments="comments"></my-comments>
+            </div>
+        </div>
+    </script>
+
+    <script id="add-comment" type="text/x-template">
+        <div class="comment-form">
+            <form>
+                <label for="comment">Comment</label>
+                <input v-model="comment" type="text" name="comment" id="comment" maxlength="100">
+                <label for="username">Username</label>
+                <input v-model="username" type="text" name="username" id="username" maxlength="15">
+                <button @click="postComment" class="comment-button">Submit</button>
+            </form>
+        </div>
+    </script>
+
+    <script id="comments" type="text/x-template">
+        <div class="comments-container">
+            <div class="comment" v-for="comment in comments" :key="comment.id">
+                <h4 class="comment-text">{{comment.text}}</h4>
+                <p class="comment-info">{{comment.username}} on {{comment.created_at}}</p>
+            </div>
+        </div>
+    </script>
+
+
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/components/modal.js"></script>
+    <script src="/js/components/add-comment.js"></script>
+    <script src="/js/components/comments.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>
