@@ -1,6 +1,6 @@
 # Social Distinstagram
 
-## [Heroku deployed version](https://isolation-imageboard.herokuapp.com/)
+## [Heroku App Link](https://isolation-imageboard.herokuapp.com/)
 
 ## Key Features
 
